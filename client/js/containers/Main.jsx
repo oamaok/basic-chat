@@ -1,7 +1,11 @@
 import React from 'react';
 
+import Authentication from './Authentication';
+
 function Main() {
-  return <div>basic chat.</div>;
+  return (
+    <Authentication />
+  );
 }
 
 export default Main;
