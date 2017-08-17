@@ -31,7 +31,7 @@ module.exports = {
       template: './client/index.html',
       filename: 'index.html',
       inject: 'body',
-      inlineSource: '.(js|css)$',
+      inlineSource: '\\.(js|css)$',
     }),
 
     new HtmlWebpackInlineSourcePlugin(),

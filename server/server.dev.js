@@ -12,7 +12,6 @@ const API_PORT = 3000;
 const compiler = webpack(config);
 const devServer = new WebpackDevServer(compiler, {
   hot: true,
-  hotOnly: true,
   stats: { colors: true },
   proxy: {
     '/api': {
@@ -23,9 +22,16 @@ const devServer = new WebpackDevServer(compiler, {
 devServer.use(middleware(compiler));
 devServer.listen(8080);
 
-let app = require('./server');
+let app;
+let server;
 
-let server = app.listen(API_PORT);
+try {
+  app = require('./server');
+  server = app.listen(API_PORT);
+} catch (err) {
+  console.error(err);
+}
+
 const watcher = chokidar.watch(__dirname);
 
 watcher.on('ready', () => {
@@ -39,7 +45,18 @@ watcher.on('ready', () => {
         delete require.cache[id];
       });
 
-    server.close(() => {
+    if (server && server.close) {
+      server.close(() => {
+        try {
+          app = require('./server');
+          server = app.listen(API_PORT);
+          process.stdout.write('Done! \n');
+        } catch (err) {
+          process.stdout.write('Error! \n');
+          console.error(err);
+        }
+      });
+    } else {
       try {
         app = require('./server');
         server = app.listen(API_PORT);
@@ -48,6 +65,6 @@ watcher.on('ready', () => {
         process.stdout.write('Error! \n');
         console.error(err);
       }
-    });
+    }
   });
 });

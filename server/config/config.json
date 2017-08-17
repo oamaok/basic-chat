@@ -1,0 +1,8 @@
+{
+  "database": {
+    "host": "localhost",
+    "user": "",
+    "password": "",
+    "database": "basic_chat"
+  }
+}
