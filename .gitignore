@@ -2,3 +2,4 @@ node_modules/
 build/
 server/config/config.development.json
 server/config/config.production.json
+*.draft

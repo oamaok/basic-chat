@@ -7,6 +7,7 @@ const path = require('path');
 module.exports = {
   entry: {
     app: [
+      'babel-polyfill',
       './client/js/index.jsx',
       './client/sass/main.sass',
     ],

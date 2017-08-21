@@ -5,11 +5,20 @@ import {
   combineReducers,
   applyMiddleware,
 } from 'redux';
+import ReduxThunk from 'redux-thunk';
 import { Provider } from 'react-redux';
+
+import authentication from './reducers/authentication';
 
 import Main from './containers/Main';
 
-const store = createStore(function() {});
+const store = createStore(
+  combineReducers({
+    authentication,
+    ebin: authentication,
+  }),
+  applyMiddleware(ReduxThunk)
+);
 
 if (__dev) {
   /* eslint-disable global-require */

@@ -4,5 +4,10 @@
     "user": "",
     "password": "",
     "database": "basic_chat"
+  },
+  "jwt": {
+    "key": "REPLACE IN ENVIRONMENT SPECIFIC CONFIG",
+    "algorithm": "HS256",
+    "ttl": 21000
   }
 }

@@ -1,11 +1,16 @@
 import React from 'react';
+import { connect } from 'react-redux';
+import { stateToProps } from '../utilities';
 
 import Authentication from './Authentication';
+import App from './App';
 
-function Main() {
+function Main({ authentication }) {
   return (
-    <Authentication />
+    <div>
+      {authentication.isAuthenticated ? <App /> : <Authentication />}
+    </div>
   );
 }
 
-export default Main;
+export default connect(stateToProps('authentication'))(Main);
