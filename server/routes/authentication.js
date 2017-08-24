@@ -1,8 +1,8 @@
-const bcrypt = require('bcrypt');
-const moment = require('moment');
-const jwt = require('jsonwebtoken');
+import bcrypt from 'bcrypt';
+import moment from 'moment';
+import jwt from 'jsonwebtoken';
 
-module.exports = (app, router) => {
+export default function authenticationRoutes(app, router) {
   const { config } = app;
   const { User } = app.models;
 
@@ -17,7 +17,15 @@ module.exports = (app, router) => {
     .get('/me', async (ctx, next) => {
       await next();
 
-      ctx.body = ctx.user;
+      if (!ctx.user) {
+        ctx.throw(403);
+        return;
+      }
+
+      ctx.body = {
+        token: createJWT(ctx.user.id),
+        user: ctx.user,
+      };
     })
     .post('/emailAvailable', async (ctx, next) => {
       await next();
@@ -44,7 +52,7 @@ module.exports = (app, router) => {
         ctx.throw(401, 'Invalid username or password!');
         return;
       }
-      
+
       const isPasswordCorrect = await bcrypt.compare(password, user.get('password'));
 
       if (!isPasswordCorrect) {
@@ -103,4 +111,4 @@ module.exports = (app, router) => {
         user: userObject,
       };
     });
-};
+}

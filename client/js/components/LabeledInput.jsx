@@ -2,13 +2,12 @@ import React from 'react';
 
 import Icon from './Icon';
 
-export default function LabeledInput({ id, label, valid, error, ...rest }) {
+export default function LabeledInput({ id, label, hint, hintType = '', ...rest }) {
   return (
     <div className="form-group">
       <label htmlFor={id}>
         {label}
-        {valid && <span className='hint success'><Icon name="&#xE86C;" /></span>}
-        {error && <span className='hint error'><Icon name="&#xE5C9;" />&nbsp;{error}</span>}
+        {hint && <span className={`hint ${hintType}`}>{hint}</span>}
       </label>
       <input
         id={id}

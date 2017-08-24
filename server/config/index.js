@@ -1,6 +1,6 @@
-const fs = require('fs');
-const path = require('path');
-const { mergeDeepRight } = require('ramda');
+import fs from 'fs';
+import path from 'path';
+import { mergeDeepRight } from 'ramda';
 
 const baseConfigPath = path.resolve(__dirname, 'config.json');
 const envConfigPath = path.resolve(__dirname, `config.${process.env.NODE_ENV}.json`);
@@ -11,12 +11,10 @@ if (!baseConfigExists) {
   throw new Error('Missing configuration file!');
 }
 
-let config = JSON.parse(fs.readFileSync(baseConfigPath));
-
+const baseConfig = JSON.parse(fs.readFileSync(baseConfigPath));
 const envConfigExists = fs.existsSync(envConfigPath);
+const config = envConfigExists
+  ? mergeDeepRight(baseConfig, JSON.parse(fs.readFileSync(envConfigPath)))
+  : baseConfig;
 
-if (envConfigExists) {
-  config = mergeDeepRight(config, JSON.parse(fs.readFileSync(envConfigPath)));
-}
-
-module.exports = config;
+export default config;

@@ -1,12 +1,12 @@
 /* eslint-disable import/no-dynamic-require */
 /* eslint-disable global-require */
 
-const fs = require('fs');
-const path = require('path');
-const Knex = require('knex');
-const Bookshelf = require('bookshelf');
+import fs from 'fs';
+import path from 'path';
+import Knex from 'knex';
+import Bookshelf from 'bookshelf';
 
-module.exports = (app) => {
+export default function modelsLoader(app) {
   const knex = Knex({
     client: 'pg',
     connection: Object.assign({ charset: 'utf8' }, app.config.database),
@@ -22,4 +22,4 @@ module.exports = (app) => {
     }), {});
 
   Object.assign(app, { models });
-};
+}

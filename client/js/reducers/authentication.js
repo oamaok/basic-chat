@@ -4,31 +4,40 @@ import { UserRecord, AuthState } from '../records';
 export default createReducer(new AuthState(), {
   LOGIN_REQUEST: state => state
     .set('isAuthenticating', true)
-    .set('loginError', 0),
+    .set('loginStatus', 0),
 
-  LOGIN_REQUEST_FAILURE: (state, error) => state
+  LOGIN_REQUEST_FAILURE: (state, status) => state
     .set('isAuthenticating', false)
-    .set('loginError', error),
+    .set('loginStatus', status),
 
-  LOGIN_REQUEST_SUCCESS: (state, { token, user }) => state
-    .set('isAuthenticating', false)
-    .set('isAuthenticated', true)
-    .set('currentUser', new UserRecord(user))
-    .set('token', token),
+  LOGIN_REQUEST_SUCCESS: (state, { token, user }) => {
+    localStorage.setItem('token', token);
+    return state
+      .set('isAuthenticating', false)
+      .set('isAuthenticated', true)
+      .set('currentUser', new UserRecord(user))
+      .set('token', token);
+  },
 
   REGISTRATION_REQUEST: state => state
     .set('isAuthenticating', true)
-    .set('registrationError', 0),
+    .set('registrationStatus', 0),
 
-  REGISTRATION_REQUEST_FAILURE: (state, error) => state
+  REGISTRATION_REQUEST_FAILURE: (state, status) => state
     .set('isAuthenticating', false)
-    .set('registrationError', error),
+    .set('registrationStatus', status),
 
-  REGISTRATION_REQUEST_SUCCESS: (state, { token, user }) => state
-    .set('isAuthenticating', false)
-    .set('isAuthenticated', true)
-    .set('currentUser', new UserRecord(user))
-    .set('token', token),
+  REGISTRATION_REQUEST_SUCCESS: (state, { token, user }) => {
+    localStorage.setItem('token', token);
+    return state
+      .set('isAuthenticating', false)
+      .set('isAuthenticated', true)
+      .set('currentUser', new UserRecord(user))
+      .set('token', token);
+  },
 
-  RESET_APP_STATE: () => new AuthState(),
+  RESET_APP_STATE: () => {
+    localStorage.removeItem('token');
+    return new AuthState();
+  },
 });
