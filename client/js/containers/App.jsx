@@ -25,22 +25,32 @@ class App extends Component {
     socket.on(ACTION, this.props.dispatch);
 
     socket.on('connect_error', () => {
+      console.log('Socket: connect_error');
       // TODO
     });
 
     socket.on('connect_timeout', () => {
+      console.log('Socket: connect_timeout');
       // TODO
     });
 
     socket.on('error', () => {
+      console.log('Socket: error');
       // TODO
     });
 
     socket.on('disconnect', () => {
+      console.log('Socket: disconnect');
       // TODO
     });
 
     socket.on('reconnect_attempt', () => {
+      console.log('Socket: reconnect_attempt');
+      // TODO
+    });
+
+    socket.on('reconnect', () => {
+      console.log('Socket: reconnect');
       // TODO
     });
   }

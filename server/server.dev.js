@@ -18,6 +18,7 @@ const devServer = new WebpackDevServer(compiler, {
   proxy: {
     '/api': {
       target: `http://localhost:${API_PORT}`,
+      ws: true,
     },
   },
 });

@@ -28,7 +28,7 @@ export default class Connection {
   }
 
   static getInstance() {
-    if (Connection.instance) {
+    if (!Connection.instance) {
       throw new Error('Connection hasn\'t been initialized!');
     }
 
