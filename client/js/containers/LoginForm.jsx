@@ -5,13 +5,13 @@ import R from 'ramda';
 import {
   bindState,
   stateToProps,
-} from '../utilities';
+} from 'utilities';
 
 import {
   loginRequest,
-} from '../actions/authentication';
+} from 'actions/authentication';
 
-import LabeledInput from '../components/LabeledInput';
+import LabeledInput from 'components/LabeledInput';
 
 // Quick and dirty email regex
 const emailRegex = /^[^@]+@[^.]{2,}\..{2,}$/;

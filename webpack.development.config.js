@@ -20,6 +20,7 @@ module.exports = {
 
   resolve: {
     extensions: ['.js', '.jsx', '.sass', '.scss'],
+    modules: ['node_modules', path.resolve(__dirname, 'client/js')],
     alias: {
       common: path.resolve(__dirname, 'common'),
     },

@@ -14,11 +14,18 @@ import {
   push,
 } from 'react-router-redux';
 
-import { apiCall } from './utilities';
-import { loginRequestSuccess, logout } from './actions/authentication';
-import authentication from './reducers/authentication';
-import rooms from './reducers/rooms';
-import Root from './containers/Root';
+import { apiCall } from 'utilities';
+import { loginRequestSuccess, logout } from 'actions/authentication';
+
+import authentication from 'reducers/authentication';
+import rooms from 'reducers/rooms';
+import users from 'reducers/users';
+
+import Root from 'containers/Root';
+
+// Redux middleware for enabling multiple actions in a single dispatch call
+const multiActions = store => next => action =>
+  (Array.isArray(action) ? action.map(store.dispatch) : next(action));
 
 (async () => {
   const history = createHistory();
@@ -27,10 +34,14 @@ import Root from './containers/Root';
     combineReducers({
       authentication,
       rooms,
+      users,
       router: routerReducer,
     }),
-    applyMiddleware(middleware),
-    applyMiddleware(ReduxThunk)
+    applyMiddleware(
+      middleware,
+      ReduxThunk,
+      multiActions
+    )
   );
 
   const token = localStorage.getItem('token');
@@ -38,8 +49,10 @@ import Root from './containers/Root';
   if (token) {
     const response = await apiCall('me', {}, token).then(res => res.json());
     if (response.token) {
-      store.dispatch(loginRequestSuccess(response));
-      store.dispatch(push('/'));
+      store.dispatch([
+        loginRequestSuccess(response),
+        push('/'),
+      ]);
     } else {
       store.dispatch(logout());
     }

@@ -1,6 +1,6 @@
 import { Map, Set } from 'immutable';
-import { createReducer } from '../utilities';
-import { RoomsState, RoomRecord } from '../records';
+import { createReducer } from 'utilities';
+import { RoomsState, RoomRecord } from 'records';
 
 export default createReducer(new RoomsState(), {
   SET_AVAILABLE_ROOMS: (state, rooms) => state
@@ -19,4 +19,9 @@ export default createReducer(new RoomsState(), {
 
   REMOVE_ACTIVE_ROOM: (state, roomId) => state
     .update('activeRooms', rooms => rooms.delete(roomId)),
+
+  SET_CURRENT_ROOM: (state, roomId) => state
+    .set('currentRoom', roomId),
+
+  RESET_APP_STATE: () => new RoomsState(),
 });

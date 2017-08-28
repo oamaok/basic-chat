@@ -11,6 +11,7 @@ export default class Connection {
 
     this.socket = io('', {
       path: '/api/ws',
+      reconnection: false,
       extraHeaders: {
         Authorization: token,
       },
@@ -22,8 +23,8 @@ export default class Connection {
     return Connection.instance;
   }
 
-  static close() {
-    Connection.instance.socket.close();
+  close() {
+    this.socket.close();
     Connection.instance = null;
   }
 

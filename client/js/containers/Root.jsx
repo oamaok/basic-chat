@@ -9,9 +9,9 @@ import {
   ConnectedRouter,
 } from 'react-router-redux';
 
-import { stateToProps } from '../utilities';
-import Authentication from './Authentication';
-import App from './App';
+import { stateToProps } from 'utilities';
+import Authentication from 'containers/Authentication';
+import App from 'containers/App';
 
 function Root({ history, authentication }) {
   const AuthorizedRoute = (...args) => (

@@ -30,4 +30,14 @@ export const RoomsState = Record({
 
   // Set of the room IDs the user 
   activeRooms: Set(),
+
+  currentRoom: '',
+});
+
+export const UsersState = Record({
+  // ID-keyed map of the users on the server
+  allUsers: Map(),
+
+  // Set of the IDs of the users who are currently connected to the server
+  connectedUsers: Set(),
 });

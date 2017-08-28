@@ -1,7 +1,7 @@
 import React from 'react';
 
-import LoginForm from './LoginForm';
-import RegistrationForm from './RegistrationForm';
+import LoginForm from 'containers/LoginForm';
+import RegistrationForm from 'containers/RegistrationForm';
 
 export default function Authentication() {
   return (

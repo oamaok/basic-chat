@@ -1,5 +1,5 @@
-import { createReducer } from '../utilities';
-import { UserRecord, AuthState } from '../records';
+import { createReducer } from 'utilities';
+import { UserRecord, AuthState } from 'records';
 
 export default createReducer(new AuthState(), {
   LOGIN_REQUEST: state => state

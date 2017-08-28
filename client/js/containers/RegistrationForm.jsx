@@ -6,14 +6,14 @@ import {
   bindState,
   stateToProps,
   apiCall,
-} from '../utilities';
+} from 'utilities';
 
 import {
   registrationRequest,
-} from '../actions/authentication';
+} from 'actions/authentication';
 
-import LabeledInput from '../components/LabeledInput';
-import Icon from '../components/Icon';
+import LabeledInput from 'components/LabeledInput';
+import Icon from 'components/Icon';
 
 // Quick and dirty email regex
 const emailRegex = /^[^@]+@[^.]{2,}\..{2,}$/;

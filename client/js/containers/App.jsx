@@ -1,46 +1,62 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { ACTION } from 'common/constants/events';
+import { EVENT_TYPE_ACTION } from 'common/constants';
 
-import { stateToProps } from '../utilities';
-import RoomList from './RoomList';
-import Chat from './Chat';
+import { stateToProps } from 'utilities';
+import RoomList from 'containers/RoomList';
+import Chat from 'containers/Chat';
 import Connection from '../Connection';
 
 class App extends Component {
   state = {
     initializing: true,
+    reconnecting: false,
   }
 
   componentWillMount() {
+    this.establishConnection();
+  }
+
+  componentWillUnmount() {
+    Connection.getInstance().close();
+  }
+
+  attemptToReconnect() {
+    this.setState({
+      reconnecting: true,
+    });
+
+    Connection.getInstance().close();
+    this.establishConnection();
+  }
+
+  establishConnection() {
     const connection = Connection.init(this.props.authentication.token);
     const { socket } = connection;
 
     socket.on('connect', () => {
       this.setState({
         initializing: false,
+        reconnecting: false,
       });
     });
 
-    socket.on(ACTION, this.props.dispatch);
+    socket.on(EVENT_TYPE_ACTION, this.props.dispatch);
+
+    socket.on('disconnect', () => {
+      this.attemptToReconnect();
+    });
 
     socket.on('connect_error', () => {
-      console.log('Socket: connect_error');
-      // TODO
+      this.attemptToReconnect();
     });
 
     socket.on('connect_timeout', () => {
-      console.log('Socket: connect_timeout');
-      // TODO
+      this.attemptToReconnect();
     });
 
     socket.on('error', () => {
       console.log('Socket: error');
-      // TODO
-    });
-
-    socket.on('disconnect', () => {
-      console.log('Socket: disconnect');
       // TODO
     });
 
@@ -53,10 +69,6 @@ class App extends Component {
       console.log('Socket: reconnect');
       // TODO
     });
-  }
-
-  componentWillUnmount() {
-    Connection.getInstance().socket.close();
   }
 
   render() {

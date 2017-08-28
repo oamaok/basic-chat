@@ -11,3 +11,10 @@ export function setActiveRooms(roomIds) {
     data: roomIds,
   };
 }
+
+export function setCurrentRoom(roomId) {
+  return {
+    type: 'SET_CURRENT_ROOM',
+    data: roomId,
+  };
+}
