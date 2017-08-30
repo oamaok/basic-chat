@@ -11,7 +11,7 @@ module.exports = (shipit) => {
   shipit.initConfig({
     default: {
       workspace,
-      repositoryUrl: 'git@github.com:oamaok/bitti.io',
+      repositoryUrl: 'git@github.com:oamaok/basic-chat',
       key: `${process.env.HOME}/.ssh/id_rsa`,
       keepReleases: 2,
       shallowClone: true,
@@ -50,7 +50,7 @@ module.exports = (shipit) => {
 
   shipit.blTask('restart-api-server', () =>
     shipit.remote(`cd ${shipit.currentPath} && npm install --prod && ./migrate.sh`)
-      .then(() => shipit.remote('pm2 reload all'))
+      .then(() => shipit.remote('pm2 reload basic-chat'))
   );
 
 
