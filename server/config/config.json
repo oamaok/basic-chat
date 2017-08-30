@@ -5,9 +5,12 @@
     "password": "",
     "database": "basic_chat"
   },
+  
   "jwt": {
-    "key": "REPLACE IN ENVIRONMENT SPECIFIC CONFIG",
+    "key": "REPLACE ME IN ENVIRONMENT SPECIFIC CONFIG",
     "algorithm": "HS256",
     "ttl": 21000
-  }
+  },
+
+  "stackTrace": false
 }

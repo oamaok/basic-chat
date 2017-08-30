@@ -164,6 +164,7 @@ export default function connections(app) {
           ]);
         } catch (err) {
           // TODO: handle errors
+          console.error(err);
         }
       },
 
@@ -182,6 +183,7 @@ export default function connections(app) {
           socket.emit(EVENT_ACTION, markMessageAsSent(messageObj.id, message.id));
         } catch (err) {
           // TODO: Send an error
+          console.error(err);
         }
       },
 

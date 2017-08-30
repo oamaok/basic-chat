@@ -4,6 +4,7 @@ import koaJson from 'koa-json';
 import koaJsonError from 'koa-json-error';
 import koaBodyparser from 'koa-bodyparser';
 import SocketIO from 'socket.io';
+import R from 'ramda';
 
 import config from './config';
 import models from './models';
@@ -29,7 +30,9 @@ server.on('close', () => {
 Object.assign(app, { io });
 
 app.use(koaBodyparser());
-app.use(koaJsonError());
+app.use(koaJsonError({
+  postFormat: (e, obj) => R.omit(config.stackTrace ? [] : ['stack'], obj),
+}));
 app.use(koaJson());
 
 // Initialize configurations
