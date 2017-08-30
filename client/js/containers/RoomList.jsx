@@ -17,7 +17,7 @@ function RoomList({
 }) {
   const activeRooms = rooms.activeRooms.map(room => rooms.availableRooms.get(room));
   const { currentRoom } = rooms;
-
+  /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
   return (
     <div className="room-list">
       <div className="section-title">
@@ -29,6 +29,7 @@ function RoomList({
       <div className="rooms">
         {activeRooms.map(room => (
           <div
+            role="navigation"
             className={currentRoom === room.id ? 'room current' : 'room'}
             key={room.id}
             onClick={() => changeRoom(room.id)}

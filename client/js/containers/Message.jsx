@@ -31,9 +31,7 @@ function Message({ messages, users }) {
       <div className="date">{dateString}</div>
       {messages.map(formatContent)}
       {message.sent &&
-        <div className="tools">
-
-        </div>
+        <div className="tools" />
       }
       <div className="clearfix" />
     </div>

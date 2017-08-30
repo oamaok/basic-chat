@@ -4,8 +4,8 @@
   "description": "Basic chat.",
   "main": "server/server.js",
   "scripts": {
-    "lint": "eslint .",
-    "lint:fix": "eslint --fix .",
+    "lint": "eslint --ext js --ext jsx .",
+    "lint:fix": "eslint --ext js --ext jsx --fix .",
     "start": "NODE_ENV=development BABEL_ENV=development babel-node server/server.dev",
     "build": "./build.sh"
   },

@@ -47,6 +47,7 @@ class RoomSelector extends Component {
 
     // TODO: display errors returned if room creation fails
 
+    /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
     return (
       <div
         className={roomSelectorOpen ? 'modal-wrapper open' : 'modal-wrapper'}

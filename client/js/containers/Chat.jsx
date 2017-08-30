@@ -14,19 +14,20 @@ class Chat extends Component {
     message: '',
   }
 
-  messageContainer = null
-
   componentDidUpdate() {
     // Reset the scroll when the component updates.
     // TODO: Display message to user when new messages appear
     // instead of scrolling to the bottom.
     const { messageContainer } = this;
-    messageContainer.scrollTop = -(messageContainer.getBoundingClientRect().height - messageContainer.scrollHeight);
+    messageContainer.scrollTop = -(messageContainer.getBoundingClientRect().height
+      - messageContainer.scrollHeight);
   }
+
+  messageContainer = null
 
   sendMessage = () => {
     this.props.sendMessage(this.state.message);
-    
+
     this.setState({
       message: '',
     });
