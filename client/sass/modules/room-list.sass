@@ -2,18 +2,21 @@
   position: relative
   min-width: 15em
   max-width: 15em
-  background-color: $dark-gray
-  color: #fff
+  background-color: $darker-gray
+  color: $text-color
   height: 100%
-  z-index: 2
-  border-right: 1em solid $light-gray
+  border-right: 1em solid $dark-gray
   .rooms
     margin-bottom: 1em
     .room
       cursor: pointer
       padding: 0.5em 1em
+      &:hover
+        font-weight: 600
       &.current
-        background-color: $main-color
+        font-weight: 600
+        box-shadow: $dropshadow
+        background-color: $primary-color
 
   .section-title
     font-size: 20px
