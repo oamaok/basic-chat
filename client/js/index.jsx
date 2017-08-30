@@ -20,6 +20,8 @@ import { loginRequestSuccess, logout } from 'actions/authentication';
 import authentication from 'reducers/authentication';
 import rooms from 'reducers/rooms';
 import users from 'reducers/users';
+import messages from 'reducers/messages';
+import modals from 'reducers/modals';
 
 import Root from 'containers/Root';
 
@@ -35,6 +37,8 @@ const multiActions = store => next => action =>
       authentication,
       rooms,
       users,
+      messages,
+      modals,
       router: routerReducer,
     }),
     applyMiddleware(

@@ -1,9 +1,14 @@
+import R from 'ramda';
 import bcrypt from 'bcrypt';
 import moment from 'moment';
 import jwt from 'jsonwebtoken';
 
+import { addUser } from 'common/actions/users';
+import { EVENT_ACTION } from 'common/constants';
+
+
 export default function authenticationRoutes(app, router) {
-  const { config } = app;
+  const { config, bookshelf, io } = app;
   const { User } = app.models;
 
   function createJWT(id) {
@@ -95,20 +100,33 @@ export default function authenticationRoutes(app, router) {
 
       const hashedPassword = await bcrypt.hash(password, 12);
 
-      const user = await User.forge({
-        email,
-        firstName,
-        lastName,
-        password: hashedPassword,
-        createdAt: new Date(),
-      }).save();
+      await bookshelf.transaction(async (transacting) => {
+        const user = await User.forge({
+          email,
+          firstName,
+          lastName,
+          password: hashedPassword,
+          createdAt: new Date(),
+        }).save(null, { transacting });
 
-      const userObject = user.toJSON();
-      delete userObject.password;
+        await user.rooms().attach({
+          roomId: '00000000-0000-4000-8000-000000000000',
+          createdAt: new Date(),
+        }, { transacting });
 
-      ctx.body = {
-        token: createJWT(user.id),
-        user: userObject,
-      };
+
+        const userObject = user.toJSON();
+        delete userObject.password;
+
+        io.sockets.emit(
+          EVENT_ACTION,
+          addUser(R.pick(['id', 'firstName', 'lastName'], userObject))
+        );
+
+        ctx.body = {
+          token: createJWT(user.id),
+          user: userObject,
+        };
+      });
     });
 }

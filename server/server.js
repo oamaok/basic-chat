@@ -3,6 +3,7 @@ import Koa from 'koa';
 import koaJson from 'koa-json';
 import koaJsonError from 'koa-json-error';
 import koaBodyparser from 'koa-bodyparser';
+import SocketIO from 'socket.io';
 
 import config from './config';
 import models from './models';
@@ -12,6 +13,20 @@ import connections from './connections';
 
 const app = new Koa();
 const server = http.createServer(app.callback());
+
+const io = SocketIO(server, {
+  path: '/api/ws',
+  pingInterval: 2000,
+  pingTimeout: 1000,
+});
+
+server.on('close', () => {
+  Object.keys(io.sockets.connected).forEach((key) => {
+    io.sockets.connected[key].disconnect();
+  });
+});
+
+Object.assign(app, { io });
 
 app.use(koaBodyparser());
 app.use(koaJsonError());
@@ -28,9 +43,8 @@ authentication(app);
 
 // Initialize routes
 routes(app);
-
 // Initialize Socket.IO connections handler
-connections(server, app);
+connections(app);
 
 if (require.main === module) {
   server.listen(3000);

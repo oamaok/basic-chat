@@ -1,15 +1,32 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { Set } from 'immutable';
+import R from 'ramda';
 
+import Message from 'containers/Message';
 import Icon from 'components/Icon';
 import { stateToProps, bindState } from 'utilities';
+import { sendMessage } from 'actions/messages';
+import { RoomRecord } from 'records';
 
 class Chat extends Component {
   state = {
     message: '',
   }
 
+  messageContainer = null
+
+  componentDidUpdate() {
+    // Reset the scroll when the component updates.
+    // TODO: Display message to user when new messages appear
+    // instead of scrolling to the bottom.
+    const { messageContainer } = this;
+    messageContainer.scrollTop = -(messageContainer.getBoundingClientRect().height - messageContainer.scrollHeight);
+  }
+
   sendMessage = () => {
+    this.props.sendMessage(this.state.message);
+    
     this.setState({
       message: '',
     });
@@ -58,18 +75,31 @@ class Chat extends Component {
       availableRooms,
     } = this.props.rooms;
 
-    const room = availableRooms.get(currentRoom);
+    const room = availableRooms.get(currentRoom) || new RoomRecord();
 
-    if (!room) {
-      return null;
-    }
+    const {
+      allMessages,
+      roomMessages,
+    } = this.props.messages;
+
+    const messages = (roomMessages.get(currentRoom) || Set())
+      .map(messageId => allMessages.get(messageId))
+      .sortBy(message => message.createdAt)
+      .toArray();
+
+    const groupedMessages = R.groupWith(
+      (a, b) => a.userId === b.userId
+      && b.createdAt.getTime() - a.createdAt.getTime() < 1000 * 60 * 10
+    )(messages);
 
     return (
       <div className="chat">
         <div className="room-header"># {room.name}</div>
-        <div className="message-container">
-          <p>here be messages</p>
+        <div className="message-container" ref={(elem) => { this.messageContainer = elem; }}>
+          {groupedMessages.map(msg => <Message messages={msg} />)}
+          <div className="clearfix" />
         </div>
+        <div className="hr" />
         <form className="input" onSubmit={handleSubmit}>
           <textarea
             ref={(elem) => { this.messageElement = elem; }}
@@ -86,4 +116,6 @@ class Chat extends Component {
   }
 }
 
-export default connect(stateToProps('rooms'))(Chat);
+export default connect(stateToProps('rooms', 'messages'), {
+  sendMessage,
+})(Chat);

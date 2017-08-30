@@ -23,5 +23,16 @@ export default createReducer(new RoomsState(), {
   SET_CURRENT_ROOM: (state, roomId) => state
     .set('currentRoom', roomId),
 
+  CREATE_ROOM_REQUEST: state => state
+    .set('isCreatingRoom', true),
+
+  CREATE_ROOM_REQUEST_FAILURE: (state, error) => state
+    .set('isCreatingRoom', false)
+    .set('roomCreationError', error),
+
+  CREATE_ROOM_REQUEST_SUCCESS: state => state
+    .set('isCreatingRoom', false)
+    .set('roomCreationError', ''),
+
   RESET_APP_STATE: () => new RoomsState(),
 });

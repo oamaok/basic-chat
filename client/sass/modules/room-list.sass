@@ -1,6 +1,43 @@
 .room-list
-  width: 18em
+  position: relative
+  min-width: 15em
+  max-width: 15em
   background-color: $dark-gray
   color: #fff
-  padding: 1em
   height: 100%
+  z-index: 2
+  .rooms
+    margin-bottom: 1em
+    .room
+      cursor: pointer
+      padding: 0.5em 1em
+      &.current
+        background-color: $main-color
+
+  .section-title
+    font-size: 20px
+    font-weight: 600
+    margin-bottom: 0.5em
+    padding: 1em 1em 0em 1em
+    button
+      line-height: 19px
+      width: 17px
+      height: 17px
+      padding: 0
+      text-align: center
+      margin-left: 10px
+      position: relative
+      top: -1px
+
+  .private-chats
+    .private-chat
+      cursor: pointer
+      padding: 0.5em 1em
+
+  .user-tools
+    position: absolute
+    bottom: 0
+    padding: 1em
+    width: 100%
+    button
+      width: 100%

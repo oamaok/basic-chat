@@ -1,8 +1,8 @@
 module.exports = (bookshelf, models) => bookshelf.Model.extend({
   tableName: 'users',
-  rooms: function users() {
+  rooms: function rooms() {
     return this.belongsToMany(
-      models.User,
+      models.Room,
       'user_rooms',
       'userId',
       'roomId'

@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { EVENT_TYPE_ACTION } from 'common/constants';
+import { EVENT_ACTION } from 'common/constants';
 
 import { stateToProps } from 'utilities';
 import RoomList from 'containers/RoomList';
 import Chat from 'containers/Chat';
+import RoomSelector from 'containers/RoomSelector';
 import Connection from '../Connection';
 
 class App extends Component {
@@ -41,7 +42,7 @@ class App extends Component {
       });
     });
 
-    socket.on(EVENT_TYPE_ACTION, this.props.dispatch);
+    socket.on(EVENT_ACTION, this.props.dispatch);
 
     socket.on('disconnect', () => {
       this.attemptToReconnect();
@@ -72,13 +73,24 @@ class App extends Component {
   }
 
   render() {
+    // TODO: Display a spinner while initializing connection
+    // TODO: Display an error while trying to reconnect
+
+    const isModelOpen = this.props.modals.userSelectorOpen
+      || this.props.modals.roomSelectorOpen;
+
+    const containerClass = isModelOpen ? 'app-container modal-open' : 'app-container';
+
     return (
       <div className="app">
-        <RoomList />
-        <Chat />
+        <RoomSelector />
+        <div className={containerClass}>
+          <RoomList />
+          <Chat />
+        </div>
       </div>
     );
   }
 }
 
-export default connect(stateToProps('authentication'))(App);
+export default connect(stateToProps('authentication', 'modals'))(App);

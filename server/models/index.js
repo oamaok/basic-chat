@@ -21,5 +21,5 @@ export default function modelsLoader(app) {
       [entry.slice(0, -3)]: require(path.resolve(__dirname, entry))(bookshelf, obj),
     }), {});
 
-  Object.assign(app, { models });
+  Object.assign(app, { models, bookshelf });
 }

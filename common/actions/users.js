@@ -5,6 +5,13 @@ export function setUsers(users) {
   };
 }
 
+export function addUser(user) {
+  return {
+    type: 'ADD_USER',
+    data: user,
+  };
+}
+
 export function setConnectedUsers(userIds) {
   return {
     type: 'SET_CONNECTED_USERS',

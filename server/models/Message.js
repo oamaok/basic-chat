@@ -1,5 +1,5 @@
 module.exports = (bookshelf, models) => bookshelf.Model.extend({
-  tableName: 'users',
+  tableName: 'messages',
   room: function room() {
     return this.belongsTo(models.Room, 'roomId');
   },

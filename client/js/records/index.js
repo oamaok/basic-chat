@@ -25,19 +25,45 @@ export const AuthState = Record({
 });
 
 export const RoomsState = Record({
-  // Map of all available public rooms, using the room id as the key
+  // Map<roomId, Room>
   availableRooms: Map(),
 
   // Set of the room IDs the user 
   activeRooms: Set(),
 
   currentRoom: '',
+
+  isCreatingRoom: false,
+  roomCreationError: '',
 });
 
 export const UsersState = Record({
-  // ID-keyed map of the users on the server
+  // Map<userId, User>
   allUsers: Map(),
 
   // Set of the IDs of the users who are currently connected to the server
   connectedUsers: Set(),
+});
+
+export const MessageRecord = Record({
+  id: '',
+  createdAt: new Date(0),
+  roomId: '',
+  userId: '',
+  contents: '',
+  sent: true,
+});
+
+export const MessagesState = Record({
+  // Map<messageId, Message>
+  allMessages: Map(),
+
+  // Map<roomId, Set<messageId>>
+  roomMessages: Map(),
+});
+
+
+export const ModalsState = Record({
+  roomSelectorOpen: false,
+  userSelectorOpen: false,
 });

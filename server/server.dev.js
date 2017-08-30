@@ -15,6 +15,8 @@ const devServer = new WebpackDevServer(compiler, {
   hot: true,
   stats: { colors: true },
   historyApiFallback: true,
+  disableHostCheck: true,
+  host: '0.0.0.0',
   proxy: {
     '/api': {
       target: `http://localhost:${API_PORT}`,
@@ -23,7 +25,7 @@ const devServer = new WebpackDevServer(compiler, {
   },
 });
 devServer.use(middleware(compiler));
-devServer.listen(8080);
+devServer.listen(8080, '0.0.0.0');
 
 let app;
 let server;

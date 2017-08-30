@@ -15,16 +15,17 @@ module.exports = {
 
   output: {
     publicPath: '/',
-    path: path.resolve(__dirname, 'build/'),
+    path: path.resolve(__dirname, 'build/client/'),
     filename: '[hash].js',
   },
 
   resolve: {
     extensions: ['.js', '.jsx', '.sass', '.scss'],
+    modules: ['node_modules', path.resolve(__dirname, 'client/js')],
     alias: {
       react: 'preact-compat',
       'react-dom': 'preact-compat',
-      common: './common/',
+      common: path.resolve(__dirname, 'common'),
     },
   },
 
@@ -33,7 +34,7 @@ module.exports = {
       template: './client/index.html',
       filename: 'index.html',
       inject: 'body',
-      inlineSource: '\\.(js|css)$',
+      inlineSource: '\\.css$',
     }),
 
     new HtmlWebpackInlineSourcePlugin(),
