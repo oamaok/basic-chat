@@ -1,4 +1,4 @@
-.room-list
+.sidebar
   position: relative
   min-width: 15em
   max-width: 15em
@@ -6,17 +6,37 @@
   color: $text-color
   height: 100%
   border-right: 1em solid $dark-gray
-  .rooms
+  box-shadow: $dropshadow
+  .room-list
     margin-bottom: 1em
     .room
+      width: 14.25em
       cursor: pointer
-      padding: 0.5em 1em
+      padding: 0em 0.5em 0 1em
+      line-height: 2em
+
+      .unread-indicator
+        height: 0.5em
+        width: 0.5em
+        display: none
+        background-color: $warning-color
+        margin-left: 0.5em
+        position: relative
+        top: -0.05em
+
       &:hover
         font-weight: 600
+
       &.current
         font-weight: 600
         box-shadow: $dropshadow
         background-color: $primary-color
+
+      &.unread
+        font-weight: 600
+        .unread-indicator
+          display: inline-block
+
 
   .section-title
     font-size: 20px
@@ -43,5 +63,10 @@
     bottom: 0
     padding: 1em
     width: 100%
+    .info
+      text-align: center
+      font-size: 14px
+      color: $light-gray
+      margin-bottom: 1em
     button
       width: 100%

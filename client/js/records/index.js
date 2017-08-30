@@ -12,6 +12,7 @@ export const RoomRecord = Record({
   id: '',
   name: '',
   type: '',
+  unreadMessages: 0,
 });
 
 export const AuthState = Record({

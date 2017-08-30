@@ -7,7 +7,8 @@
     "lint": "eslint --ext js --ext jsx .",
     "lint:fix": "eslint --ext js --ext jsx --fix .",
     "start": "NODE_ENV=development BABEL_ENV=development babel-node server/server.dev",
-    "build": "./build.sh"
+    "build": "./build.sh",
+    "deploy": "shipit production deploy"
   },
   "author": "Teemu Pääkkönen <oamaok@gmail.com>",
   "license": "MIT",
@@ -22,6 +23,7 @@
     "babel-preset-react": "^6.24.1",
     "babel-preset-stage-0": "^6.24.1",
     "chokidar": "^1.7.0",
+    "classnames": "^2.2.5",
     "css-loader": "^0.28.4",
     "eslint": "^4.4.1",
     "eslint-config-airbnb": "^15.1.0",
@@ -43,6 +45,9 @@
     "react-router-redux": "^5.0.0-alpha.6",
     "redux": "^3.7.2",
     "sass-loader": "^6.0.6",
+    "shipit": "^1.0.2",
+    "shipit-cli": "^3.0.0",
+    "shipit-deploy": "^2.5.1",
     "socket.io-client": "^2.0.3",
     "style-loader": "^0.18.2",
     "webpack": "^3.5.2",

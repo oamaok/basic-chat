@@ -1,4 +1,5 @@
 .room-selector
+  padding: 1em
   h3
     display: inline-block
   .modal-exit
@@ -8,8 +9,8 @@
     float: right
     padding: 0
   .join
-    padding: 1em
-    .list
+    padding-bottom: 1em
+    .room-list
       height: 9em
       background-color: $white
       box-shadow: inset 0 1px 2px rgba(0,0,0,0.4)
@@ -29,8 +30,8 @@
         text-align: center
         font-weight: 600
   .new
-    padding: 1em
-    color: $text-color
-    background-color: $darker-gray
+    border-top: 3px solid $lighter-gray
+    padding-top: 1em
+    background-color: $lightest-gray
     button
       float: right

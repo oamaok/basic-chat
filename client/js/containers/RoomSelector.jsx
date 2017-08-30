@@ -64,7 +64,7 @@ class RoomSelector extends Component {
                 <Icon name="&#xE14C;" />
               </button>
             </div>
-            <div className="list">
+            <div className="room-list">
               {rooms.map(room => (
                 <div key={room.id} className="room">
                   # {room.name}

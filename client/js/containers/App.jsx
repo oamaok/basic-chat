@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { EVENT_ACTION } from 'common/constants';
 
 import { stateToProps } from 'utilities';
-import RoomList from 'containers/RoomList';
+import Sidebar from 'containers/Sidebar';
 import Chat from 'containers/Chat';
 import RoomSelector from 'containers/RoomSelector';
 import Connection from '../Connection';
@@ -85,7 +85,7 @@ class App extends Component {
       <div className="app">
         <RoomSelector />
         <div className={containerClass}>
-          <RoomList />
+          <Sidebar />
           <Chat />
         </div>
       </div>
