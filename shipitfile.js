@@ -57,6 +57,9 @@ module.exports = (shipit) => {
   shipit.on('fetched', () => shipit.start([
     'install-modules',
     'build-package',
-    'restart-api-server',
   ]));
+
+  shipit.on('published', () =>
+    shipit.start('restart-api-server')
+  );
 };

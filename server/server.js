@@ -50,7 +50,7 @@ routes(app);
 connections(app);
 
 if (require.main === module) {
-  server.listen(3000);
+  server.listen(config.apiPort);
 }
 
 export default server;

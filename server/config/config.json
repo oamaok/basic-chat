@@ -1,4 +1,7 @@
 {
+  "apiPort": 3001,
+  "stackTrace": false,
+
   "database": {
     "host": "localhost",
     "user": "",
@@ -10,7 +13,5 @@
     "key": "REPLACE ME IN ENVIRONMENT SPECIFIC CONFIG",
     "algorithm": "HS256",
     "ttl": 21000
-  },
-
-  "stackTrace": false
+  }
 }
