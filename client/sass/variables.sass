@@ -2,14 +2,16 @@ $font: 'Questrial'
 $font-url: 'https://fonts.googleapis.com/css?family=' + $font
 $letter-spacing: 0.05em
 
-$primary-color: #69d
+$primary-color: adjust-hue(#69d, 10deg)
 
 $white: #fff
-$lightest-gray: darken($white, 10%)
-$lighter-gray: darken($white, 20%)
-$light-gray: darken($white, 40%)
-$dark-gray: darken($white, 60%)
-$darker-gray: darken($white, 73%)
+$darken: 19%
+
+$lightest-gray: darken($white, $darken - 10%)
+$lighter-gray: darken($white, $darken)
+$light-gray: darken($lighter-gray, $darken)
+$dark-gray: darken($light-gray, $darken)
+$darker-gray: darken($dark-gray, $darken)
 
 $text-color: $white
 $success-color: #6d6
