@@ -12,6 +12,7 @@ class App extends Component {
   state = {
     initializing: true,
     reconnecting: false,
+    unmounting: false,
   }
 
   componentWillMount() {
@@ -19,10 +20,19 @@ class App extends Component {
   }
 
   componentWillUnmount() {
+    console.log('componentWillUnmount()');
+    this.setState({
+      unmounting: true,
+    });
+    
     Connection.getInstance().close();
   }
 
   attemptToReconnect() {
+    if (this.state.unmounting) {
+      return;
+    }
+
     this.setState({
       reconnecting: true,
     });
@@ -32,6 +42,7 @@ class App extends Component {
   }
 
   establishConnection() {
+    console.log('establishConnection()');
     const connection = Connection.init(this.props.authentication.token);
     const { socket } = connection;
 
@@ -75,6 +86,10 @@ class App extends Component {
   render() {
     // TODO: Display a spinner while initializing connection
     // TODO: Display an error while trying to reconnect
+
+    if (this.state.initializing) {
+      return null;
+    }
 
     const isModelOpen = this.props.modals.userSelectorOpen
       || this.props.modals.roomSelectorOpen;

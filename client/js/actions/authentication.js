@@ -1,4 +1,3 @@
-import { push } from 'react-router-redux';
 import { apiCall } from 'utilities';
 
 export function loginRequestFailure(error) {
@@ -37,10 +36,7 @@ export function loginRequest(email, password) {
 
       const json = await response.json();
 
-      dispatch([
-        loginRequestSuccess(json),
-        push('/'),
-      ]);
+      dispatch(loginRequestSuccess(json));
     } catch (err) {
       dispatch(loginRequestFailure(500));
     }
@@ -86,10 +82,7 @@ export function registrationRequest(email, firstName, lastName, password) {
 
       const json = await response.json();
 
-      dispatch([
-        registrationRequestSuccess(json),
-        push('/'),
-      ]);
+      dispatch(registrationRequestSuccess(json));
     } catch (err) {
       dispatch(registrationRequestFailure(500));
     }

@@ -7,12 +7,6 @@ import {
 } from 'redux';
 import ReduxThunk from 'redux-thunk';
 import { Provider } from 'react-redux';
-import createHistory from 'history/createBrowserHistory';
-import {
-  routerMiddleware,
-  routerReducer,
-  push,
-} from 'react-router-redux';
 
 import { apiCall } from 'utilities';
 import { loginRequestSuccess, logout } from 'actions/authentication';
@@ -30,8 +24,6 @@ const multiActions = store => next => action =>
   (Array.isArray(action) ? action.map(store.dispatch) : next(action));
 
 (async () => {
-  const history = createHistory();
-  const middleware = routerMiddleware(history);
   const store = createStore(
     combineReducers({
       authentication,
@@ -39,10 +31,8 @@ const multiActions = store => next => action =>
       users,
       messages,
       modals,
-      router: routerReducer,
     }),
     applyMiddleware(
-      middleware,
       ReduxThunk,
       multiActions
     )
@@ -53,10 +43,7 @@ const multiActions = store => next => action =>
   if (token) {
     const response = await apiCall('me', {}, token).then(res => res.json());
     if (response.token) {
-      store.dispatch([
-        loginRequestSuccess(response),
-        push('/'),
-      ]);
+      store.dispatch(loginRequestSuccess(response));
     } else {
       store.dispatch(logout());
     }
@@ -72,7 +59,7 @@ const multiActions = store => next => action =>
       ReactDOM.render(
         <AppContainer>
           <Provider store={store}>
-            <Root history={history} />
+            <Root />
           </Provider>
         </AppContainer>,
         document.getElementById('root')

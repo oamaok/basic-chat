@@ -27,4 +27,6 @@ export default createReducer(new MessagesState(), {
     .updateIn(['roomMessages', state.allMessages.get(localId).roomId],
       messages => messages.delete(localId).add(messageId)
     ),
+
+  RESET_APP_STATE: () => new MessagesState(),
 });

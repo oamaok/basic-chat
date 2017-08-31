@@ -45,11 +45,14 @@ module.exports = (shipit) => {
     shipit.local(
       'npm run build',
       { cwd: shipit.config.workspace }
-    )
+    ).then(() => shipit.local(
+      `cp ${__dirname}/server/config/config.production.json ${workspace}/build/server/config/`,
+      { cwd: shipit.config.workspace }
+    ))
   );
 
   shipit.blTask('restart-api-server', () =>
-    shipit.remote(`cd ${shipit.currentPath} && npm install --prod && ./migrate.sh`)
+    shipit.remote(`cd ${shipit.currentPath} && npm install --prod`)
       .then(() => shipit.remote('pm2 reload basic-chat'))
   );
 

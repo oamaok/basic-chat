@@ -97,7 +97,7 @@ class Chat extends Component {
       <div className="chat">
         <div className="room-header"># {room.name}</div>
         <div className="message-container" ref={(elem) => { this.messageContainer = elem; }}>
-          {groupedMessages.map(msg => <Message messages={msg} />)}
+          {groupedMessages.map(msgs => <Message key={msgs[0].id} messages={msgs} />)}
           <div className="clearfix" />
         </div>
         <div className="hr" />
