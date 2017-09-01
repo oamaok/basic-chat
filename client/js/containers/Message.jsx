@@ -19,8 +19,8 @@ function Message({ messages, users }) {
 
   const dateString = `${year}-${month}-${date} ${hour}:${minute}`;
 
-  const formatContent = ({ id, unsent, contents }) => (
-    <div className={unsent ? 'contents unsent' : 'contents'} key={id}>
+  const formatContent = ({ id, sent, contents }) => (
+    <div className={sent ? 'contents' : 'contents unsent'} key={id}>
       {contents.split('\n').map((split, idx) => <p key={idx}>{split}</p>)}
     </div>
   );
