@@ -49,6 +49,20 @@ const multiActions = store => next => action =>
     }
   }
 
+  // Refresh the token
+  setInterval(async () => {
+    const { token } = store.getState().authentication;
+
+    if (token) {
+      const response = await apiCall('me', {}, token).then(res => res.json());
+      if (response.token) {
+        store.dispatch(loginRequestSuccess(response));
+      } else {
+        store.dispatch(logout());
+      }
+    }
+  }, 1000 * 60 * 5);
+
   if (__dev) {
     /* eslint-disable global-require */
     // Require the app container here, so the dead code elimination
