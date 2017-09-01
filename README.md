@@ -26,7 +26,7 @@ npm install
 
 ## Development
 
-Once done with the installation steps, navigate to the main directory and run `npm start`. Dev server will be booted and is accessible at [**http://localhost:3000**](http://localhost:8080).
+Once done with the installation steps, navigate to the main directory and run `npm start`. Dev server will be booted and is accessible at [http://localhost:8080](http://localhost:8080).
 
 ## Licence
 
