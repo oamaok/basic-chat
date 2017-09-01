@@ -23,8 +23,6 @@ module.exports = {
     extensions: ['.js', '.jsx', '.sass', '.scss'],
     modules: ['node_modules', path.resolve(__dirname, 'client/js')],
     alias: {
-      react: 'preact-compat',
-      'react-dom': 'preact-compat',
       common: path.resolve(__dirname, 'common'),
     },
   },
