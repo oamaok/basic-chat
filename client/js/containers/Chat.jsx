@@ -2,12 +2,12 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Set } from 'immutable';
 import R from 'ramda';
-
+import { ROOM_TYPE_PUBLIC } from 'common/constants';
 import Message from 'containers/Message';
 import Icon from 'components/Icon';
 import { stateToProps, bindState } from 'utilities';
 import { sendMessage } from 'actions/messages';
-import { RoomRecord } from 'records';
+import { RoomRecord, UserRecord } from 'records';
 
 class Chat extends Component {
   state = {
@@ -26,6 +26,9 @@ class Chat extends Component {
   messageContainer = null
 
   sendMessage = () => {
+    if (!this.state.message) {
+      return;
+    }
     this.props.sendMessage(this.state.message);
 
     this.setState({
@@ -76,6 +79,14 @@ class Chat extends Component {
       availableRooms,
     } = this.props.rooms;
 
+    const {
+      currentUser,
+    } = this.props.authentication;
+
+    const {
+      allUsers,
+    } = this.props.users;
+
     const room = availableRooms.get(currentRoom) || new RoomRecord();
 
     const {
@@ -88,15 +99,30 @@ class Chat extends Component {
       .sortBy(message => message.createdAt)
       .toArray();
 
+    // Group the messages based on user and time to avoid unneccessarily outputting the
+    // message authors' names for message
     const groupedMessages = R.groupWith(
       (a, b) => a.userId === b.userId
       && b.createdAt.getTime() - a.createdAt.getTime() < 1000 * 60 * 10
     )(messages);
 
+    // Deduce the room name:
+    //  - If the room is public, just output the name
+    //  - If the room is private, output comma-separated list of users in the room
+    //    (excluding the current user)
+    const roomName = room.type === ROOM_TYPE_PUBLIC
+      ? `# ${room.name}`
+      : room.users
+        .filter(({ id }) => id !== currentUser.id)
+        // Since the users may have not been loaded, fall back to defaults
+        .map(({ id }) => allUsers.get(id) || new UserRecord())
+        .map(({ firstName, lastName }) => `${firstName} ${lastName}`).join(', ');
+
     return (
       <div className="chat">
-        <div className="room-header"># {room.name}</div>
+        <div className="room-header">{roomName}</div>
         <div className="message-container" ref={(elem) => { this.messageContainer = elem; }}>
+          {groupedMessages.length === 0 && <span>no messages, yet :)</span>}
           {groupedMessages.map(msgs => <Message key={msgs[0].id} messages={msgs} />)}
           <div className="clearfix" />
         </div>
@@ -117,6 +143,6 @@ class Chat extends Component {
   }
 }
 
-export default connect(stateToProps('rooms', 'messages'), {
+export default connect(stateToProps('rooms', 'messages', 'users', 'authentication'), {
   sendMessage,
 })(Chat);

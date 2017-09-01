@@ -1,38 +1,33 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { EVENT_ACTION } from 'common/constants';
-
+import classNames from 'classnames';
 import { stateToProps } from 'utilities';
 import Sidebar from 'containers/Sidebar';
 import Chat from 'containers/Chat';
 import RoomSelector from 'containers/RoomSelector';
+import UserSelector from 'containers/UserSelector';
 import Connection from '../Connection';
 
 class App extends Component {
   state = {
     initializing: true,
     reconnecting: false,
-    unmounting: false,
   }
+
+  unmounting = false
 
   componentWillMount() {
     this.establishConnection();
   }
 
   componentWillUnmount() {
-    console.log('componentWillUnmount()');
-    this.setState({
-      unmounting: true,
-    });
-    
+    this.unmounting = true;
+
     Connection.getInstance().close();
   }
 
   attemptToReconnect() {
-    if (this.state.unmounting) {
-      return;
-    }
-
     this.setState({
       reconnecting: true,
     });
@@ -42,7 +37,10 @@ class App extends Component {
   }
 
   establishConnection() {
-    console.log('establishConnection()');
+    if (this.unmounting) {
+      return;
+    }
+
     const connection = Connection.init(this.props.authentication.token);
     const { socket } = connection;
 
@@ -56,6 +54,10 @@ class App extends Component {
     socket.on(EVENT_ACTION, this.props.dispatch);
 
     socket.on('disconnect', () => {
+      if (this.state.unmounting) {
+        return;
+      }
+
       this.attemptToReconnect();
     });
 
@@ -66,39 +68,28 @@ class App extends Component {
     socket.on('connect_timeout', () => {
       this.attemptToReconnect();
     });
-
-    socket.on('error', () => {
-      console.log('Socket: error');
-      // TODO
-    });
-
-    socket.on('reconnect_attempt', () => {
-      console.log('Socket: reconnect_attempt');
-      // TODO
-    });
-
-    socket.on('reconnect', () => {
-      console.log('Socket: reconnect');
-      // TODO
-    });
   }
 
   render() {
-    // TODO: Display a spinner while initializing connection
+    // TODO: Display a spinner while initializing connection (?)
     // TODO: Display an error while trying to reconnect
 
-    if (this.state.initializing) {
-      return null;
-    }
-
-    const isModelOpen = this.props.modals.userSelectorOpen
+    const isModalOpen = this.props.modals.userSelectorOpen
       || this.props.modals.roomSelectorOpen;
 
-    const containerClass = isModelOpen ? 'app-container modal-open' : 'app-container';
+    const initializing = this.state.initializing
+      || this.props.rooms.availableRooms.size === 0;
+
+    const containerClass = classNames('app-container', {
+      'modal-open': isModalOpen,
+      initializing,
+    });
+
 
     return (
       <div className="app">
         <RoomSelector />
+        <UserSelector />
         <div className={containerClass}>
           <Sidebar />
           <Chat />
@@ -108,4 +99,4 @@ class App extends Component {
   }
 }
 
-export default connect(stateToProps('authentication', 'modals'))(App);
+export default connect(stateToProps('authentication', 'rooms', 'modals'))(App);

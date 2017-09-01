@@ -110,6 +110,7 @@ export default function authenticationRoutes(app, router) {
         }).save(null, { transacting });
 
         await user.rooms().attach({
+          // The default '#general' room id
           roomId: '00000000-0000-4000-8000-000000000000',
           createdAt: new Date(),
         }, { transacting });

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { stateToProps, bindState } from 'utilities';
+import { stateToProps } from 'utilities';
 
 import { joinRoom, createRoom } from 'actions/rooms';
 import { closeRoomSelector } from 'actions/modals';
@@ -12,7 +12,11 @@ class RoomSelector extends Component {
     name: '',
   }
 
-  bind = bindState(this)
+  handleNameChange = (evt) => {
+    this.setState({
+      name: evt.target.value.replace(/[^a-z0-9_-]/gi, ''),
+    });
+  }
 
   handleWrapperClick = (evt) => {
     if (Array.from(evt.target.classList).includes('modal-wrapper')) {
@@ -27,12 +31,16 @@ class RoomSelector extends Component {
   }
 
   render() {
-    const { bind, handleWrapperClick, handleRoomCreate } = this;
+    const {
+      handleNameChange,
+      handleWrapperClick,
+      handleRoomCreate,
+    } = this;
     const { roomSelectorOpen } = this.props.modals;
     const { availableRooms, activeRooms } = this.props.rooms;
     const { name } = this.state;
 
-    const rooms = availableRooms.filter(room => !activeRooms.includes(room.id));
+    const rooms = availableRooms.filter(({ id }) => !activeRooms.includes(id));
 
     const isRoomNameAvailable = !availableRooms.find(room => room.name === name)
       && name.length !== 0;
@@ -65,10 +73,10 @@ class RoomSelector extends Component {
               </button>
             </div>
             <div className="room-list">
-              {rooms.map(room => (
-                <div key={room.id} className="room">
-                  # {room.name}
-                  <button onClick={() => this.props.joinRoom(room.id)}>join!</button>
+              {rooms.map(({ id, name }) => (
+                <div key={id} className="room">
+                  # {name}
+                  <button onClick={() => this.props.joinRoom(id)}>join!</button>
                 </div>
               )).toArray()}
               {!rooms.size &&
@@ -84,7 +92,8 @@ class RoomSelector extends Component {
               label="name"
               hintType={nameHintType}
               hint={nameHint}
-              {...bind('name')}
+              value={name}
+              onChange={handleNameChange}
             />
             <button disabled={!isRoomNameAvailable}>create!</button>
             <div className="clearfix" />

@@ -1,12 +1,14 @@
 import R from 'ramda';
 
 import {
+  ROOM_TYPE_PUBLIC,
+  ROOM_TYPE_PRIVATE,
   EVENT_ACTION,
   EVENT_CHANGE_ROOM,
   EVENT_CREATE_ROOM,
-  ROOM_TYPE_PUBLIC,
   EVENT_NEW_MESSAGE,
   EVENT_JOIN_ROOM,
+  EVENT_CREATE_PRIVATE_ROOM,
 } from 'common/constants';
 
 import {
@@ -39,7 +41,7 @@ export default function connections(app) {
     Room,
     Message,
   } = app.models;
-  const { io } = app;
+  const { io, bookshelf } = app;
 
   io.on('connection', async (socket) => {
     const id = idFromJWT(
@@ -54,7 +56,10 @@ export default function connections(app) {
       return;
     }
 
-    const pUser = User.where({ id }).fetch({ withRelated: ['rooms'] });
+    const pUser = User.where({ id }).fetch({ withRelated: [
+      { rooms: qb => qb.columns('id', 'type') },
+      { 'rooms.users': qb => qb.columns('id') },
+    ] });
     const pRooms = Room.where({ type: ROOM_TYPE_PUBLIC }).fetchAll();
     const pUsers = User.fetchAll({
       columns: ['id', 'firstName', 'lastName'],
@@ -72,10 +77,12 @@ export default function connections(app) {
       return;
     }
 
-    // Tie the user data to the socket
-    Object.assign(socket, { user: user.toJSON() });
+    const userJson = user.toJSON({ omitPivot: true });
 
-    const activeRooms = user.toJSON().rooms.map(room => room.id);
+    // Tie the user data to the socket
+    Object.assign(socket, { user: userJson });
+
+    const activeRooms = userJson.rooms.map(room => room.id);
     const currentRoomId = user.get('currentRoomId');
     const connectedUsers = R.toPairs(io.sockets.connected)
       .filter(pair => pair[1].user)
@@ -83,8 +90,13 @@ export default function connections(app) {
 
     socket.join(activeRooms);
 
+    const availableRooms = R.concat(
+      rooms.toJSON(),
+      userJson.rooms.filter(R.propEq('type', ROOM_TYPE_PRIVATE))
+    );
+
     socket.emit(EVENT_ACTION, [
-      setAvailableRooms(rooms.toJSON()),
+      setAvailableRooms(availableRooms),
       setActiveRooms(activeRooms),
       setCurrentRoom(currentRoomId),
       setUsers(users.toJSON()),
@@ -105,6 +117,7 @@ export default function connections(app) {
     // Event handlers
     R.forEachObjIndexed(R.flip(socket.on.bind(socket)), {
       [EVENT_CHANGE_ROOM]: async (roomId) => {
+        // TODO: handle errors if one tries to join an unexistent room
         await user.set('currentRoomId', roomId).save();
 
         const messages = await Message.query({
@@ -119,6 +132,7 @@ export default function connections(app) {
         socket.join(roomId);
 
         // TODO: transactions? maybe not neccessary.
+        // TODO: handle errors if one tries to join an unexistent room
         await user.rooms().attach({
           roomId,
           createdAt: new Date(),
@@ -139,6 +153,11 @@ export default function connections(app) {
 
       [EVENT_CREATE_ROOM]: async (name) => {
         try {
+          // Check for illegal characters
+          if (name.match(/[^a-z0-9_-]/)) {
+            throw new Error('Invalid room name!');
+          }
+
           const room = await Room.forge({
             creatorId: id,
             createdAt: new Date(),
@@ -168,6 +187,74 @@ export default function connections(app) {
         }
       },
 
+      // TODO: add support for group chats
+      [EVENT_CREATE_PRIVATE_ROOM]: async (userId) => {
+        try {
+          if (userId === id) {
+            throw new Error('Invalid user ID!');
+          }
+
+          await bookshelf.transaction(async (transacting) => {
+            const otherUser = await User.where({ id: userId }).fetch({ transacting });
+
+            // Create name based on the user IDs
+            const roomName = `${id}_${otherUser.get('id')}`;
+
+            const room = await Room.forge({
+              creatorId: id,
+              createdAt: new Date(),
+              type: ROOM_TYPE_PRIVATE,
+              name: roomName,
+            }).save(null, { transacting });
+
+            const roomId = room.get('id');
+
+            // Add the room to both users' rooms
+            await user.rooms().attach({
+              roomId,
+              createdAt: new Date(),
+            }, { transacting });
+
+            await otherUser.rooms().attach({
+              roomId,
+              createdAt: new Date(),
+            }, { transacting });
+
+            // Only set the creator's current room to the on just created
+            await user.set('currentRoomId', roomId).save(null, { transacting });
+
+            const roomJson = R.merge(
+              room.toJSON({ omitPivot: true }),
+              // Add the relevant users to the response room
+              { users: [
+                { id }, { id: otherUser.id },
+              ] }
+            );
+
+            socket.emit(EVENT_ACTION, [
+              addAvailableRoom(roomJson),
+              addActiveRoom(roomId),
+              setCurrentRoom(roomId),
+              createRoomRequestSuccess(),
+            ]);
+
+            // Send room data to the other person if they have connections open
+            const otherUserConnections = R.toPairs(io.sockets.connected)
+              .filter(pair => pair[1].user && pair[1].user.id === otherUser.get('id'));
+
+            otherUserConnections.forEach(([, otherSocket]) => {
+              otherSocket.emit(EVENT_ACTION, [
+                addAvailableRoom(roomJson),
+                addActiveRoom(roomId),
+              ]);
+            });
+          });
+        } catch (err) {
+          // TODO: handle errors
+          console.error(err);
+        }
+      },
+
       [EVENT_NEW_MESSAGE]: async (messageObj) => {
         try {
           const message = await Message.forge({
@@ -189,7 +276,7 @@ export default function connections(app) {
 
       disconnect: () => {
         const aliveConnections = R.toPairs(io.sockets.connected)
-          .filter(pair => pair[1].user && pair[1].user.id === id);
+          .filter(([, sock]) => sock.user && sock.user.id === id);
 
         // Inform all remaining connected clients of the disconnect
         // only if this is the last connection by this user

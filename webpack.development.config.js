@@ -23,10 +23,6 @@ module.exports = {
     modules: ['node_modules', path.resolve(__dirname, 'client/js')],
     alias: {
       common: path.resolve(__dirname, 'common'),
-      // Required by the react-hot-loader
-      'preact-compat': 'preact-compat/dist/preact-compat',
-      'react-dom': 'preact-compat',
-      react: 'preact-compat',
     },
   },
 

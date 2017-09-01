@@ -27,6 +27,10 @@ body, html, #root, .app, .app-container
   display: flex
   flex-direction: row
   align-items: stretch
+  opacity: 1
+  transition: 0.2s opacity ease-out 
+  &.initializing
+    opacity: 0
   &.modal-open
     filter: blur(2px) grayscale(50%)
 h1,h2,h3,h4,h5,h6

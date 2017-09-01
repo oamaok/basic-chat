@@ -19,11 +19,13 @@ function Message({ messages, users }) {
 
   const dateString = `${year}-${month}-${date} ${hour}:${minute}`;
 
-  const formatContent = msg => (
-    <div className="contents" key={msg.id}>
-      {msg.contents.split('\n').map((split, idx) => <p key={idx}>{split}</p>)}
+  const formatContent = ({ id, unsent, contents }) => (
+    <div className={unsent ? 'contents unsent' : 'contents'} key={id}>
+      {contents.split('\n').map((split, idx) => <p key={idx}>{split}</p>)}
     </div>
   );
+
+  // TODO: implement message editing, deletion etc
 
   return (
     <div className={message.sent ? 'message' : 'message unsent'}>

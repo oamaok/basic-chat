@@ -2,6 +2,7 @@ import {
   EVENT_CHANGE_ROOM,
   EVENT_JOIN_ROOM,
   EVENT_CREATE_ROOM,
+  EVENT_CREATE_PRIVATE_ROOM,
 } from 'common/constants';
 
 import {
@@ -28,6 +29,13 @@ export function joinRoom(roomId) {
 export function createRoom(name) {
   const { socket } = Connection.getInstance();
   socket.emit(EVENT_CREATE_ROOM, name);
+
+  return createRoomRequest();
+}
+
+export function createPrivateRoom(userId) {
+  const { socket } = Connection.getInstance();
+  socket.emit(EVENT_CREATE_PRIVATE_ROOM, userId);
 
   return createRoomRequest();
 }

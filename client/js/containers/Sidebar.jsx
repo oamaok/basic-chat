@@ -1,35 +1,37 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { OrderedSet } from 'immutable';
 import { stateToProps } from 'utilities';
-import classNames from 'classnames';
-import StatusIndicator from 'containers/StatusIndicator';
 import Icon from 'components/Icon';
 import { changeRoom } from 'actions/rooms';
 import { logout } from 'actions/authentication';
 import { openUserSelector, openRoomSelector } from 'actions/modals';
+import {
+  ROOM_TYPE_PUBLIC,
+  ROOM_TYPE_PRIVATE,
+} from 'common/constants';
+
+import PublicRoomListing from 'containers/PublicRoomListing';
+import PrivateRoomListing from 'containers/PrivateRoomListing';
 
 function Sidebar({
   rooms,
-  users,
-  changeRoom,
   openRoomSelector,
   openUserSelector,
   logout,
   authentication,
 }) {
-  const activeRooms = rooms.activeRooms.map(room => rooms.availableRooms.get(room));
-  const { currentRoom } = rooms;
-  /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
-
-  const roomClass = room => classNames('room', {
-    current: currentRoom === room.id,
-    unread: room.unreadMessages !== 0,
-  });
+  const activeRooms = rooms.activeRooms
+    .map(roomId => rooms.availableRooms.get(roomId))
+    .groupBy(({ type }) => type);
 
   const {
     firstName,
     lastName,
   } = authentication.currentUser;
+
+  const publicRooms = activeRooms.get(ROOM_TYPE_PUBLIC) || OrderedSet();
+  const privateRooms = activeRooms.get(ROOM_TYPE_PRIVATE) || OrderedSet();
 
   return (
     <div className="sidebar">
@@ -40,17 +42,7 @@ function Sidebar({
         </button>
       </div>
       <div className="room-list">
-        {activeRooms.map(room => (
-          <div
-            role="navigation"
-            className={roomClass(room)}
-            key={room.id}
-            onClick={() => changeRoom(room.id)}
-          >
-            # {room.name}
-            <div className="unread-indicator" />
-          </div>
-        )).toArray()}
+        {publicRooms.map(room => <PublicRoomListing key={room.id} room={room} />).toArray()}
       </div>
       <div className="section-title">
         people
@@ -58,13 +50,8 @@ function Sidebar({
           <Icon name="&#xE145;" />
         </button>
       </div>
-      <div className="private-chats">
-        {users.allUsers.map(user => (
-          <div className="private-chat" key={user.id}>
-            <StatusIndicator user={user} />
-            {user.firstName} {user.lastName}
-          </div>
-        )).toArray()}
+      <div className="room-list">
+        {privateRooms.map(room => <PrivateRoomListing key={room.id} room={room} />).toArray()}
       </div>
       <div className="user-tools">
         <div className="info">{firstName} {lastName}</div>

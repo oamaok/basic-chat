@@ -13,6 +13,7 @@ export const RoomRecord = Record({
   name: '',
   type: '',
   unreadMessages: 0,
+  users: [],
 });
 
 export const AuthState = Record({
@@ -31,6 +32,8 @@ export const RoomsState = Record({
 
   // Set of the room IDs the user 
   activeRooms: Set(),
+
+  // Private rooms
 
   currentRoom: '',
 
