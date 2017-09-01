@@ -24,7 +24,6 @@ class RegistrationForm extends Component {
     firstName: '',
     lastName: '',
     password: '',
-    passwordRepeat: '',
     checkingEmailAvailability: false,
     emailAvailable: true,
   }
@@ -85,7 +84,6 @@ class RegistrationForm extends Component {
       firstName,
       lastName,
       password,
-      passwordRepeat,
       emailAvailable,
       checkingEmailAvailability,
     } = this.state;
@@ -97,8 +95,6 @@ class RegistrationForm extends Component {
     const isFirstNameValid = !!firstName.length;
     const isLastNameValid = !!lastName.length;
     const isPasswordValid = password.length >= 8;
-    const isPasswordRepeatValid = isPasswordValid
-      && password === passwordRepeat;
 
     const signupButtonDisabled = !(
       isEmailValid
@@ -106,7 +102,6 @@ class RegistrationForm extends Component {
       && isFirstNameValid
       && isLastNameValid
       && isPasswordValid
-      && isPasswordRepeatValid
     ) || checkingEmailAvailability
       || isAuthenticating;
 
@@ -132,16 +127,6 @@ class RegistrationForm extends Component {
       : <span>{errorIcon} password is too short!</span>;
 
     const passwordHintType = isPasswordValid ? 'success' : 'error';
-
-    // Boolean tuple checks
-    const passwordRepeatHint = R.cond([
-      [R.equals([true, false]), R.always(<span>{errorIcon} no match!</span>)],
-      [R.equals([true, true]), R.always(validIcon)],
-      [R.T, R.always(null)],
-    ])([isPasswordValid, isPasswordRepeatValid]);
-
-    const passwordRepeatHintType = R.all(R.identity)([isPasswordValid, isPasswordRepeatValid])
-      ? 'success' : 'error';
 
     return (
       <form className="registration" method="post" onSubmit={handleSubmit}>
@@ -186,16 +171,6 @@ class RegistrationForm extends Component {
           placeholder="************"
           disabled={isAuthenticating}
           {...bind('password')}
-        />
-        <LabeledInput
-          id="reg-passwd-repeat"
-          label="password (again)"
-          type="password"
-          hint={passwordRepeatHint}
-          hintType={passwordRepeatHintType}
-          placeholder="************"
-          disabled={isAuthenticating}
-          {...bind('passwordRepeat')}
         />
         <input
           type="submit"

@@ -44,6 +44,7 @@ function Sidebar({
       <div className="room-list">
         {publicRooms.map(room => <PublicRoomListing key={room.id} room={room} />).toArray()}
       </div>
+      <hr />
       <div className="section-title">
         people
         <button onClick={openUserSelector}>

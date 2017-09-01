@@ -84,6 +84,7 @@ class RoomSelector extends Component {
               }
             </div>
           </div>
+          <hr />
           <form className="new" onSubmit={handleRoomCreate}>
             <h3>create a new room</h3>
             <LabeledInput

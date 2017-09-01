@@ -118,15 +118,17 @@ class Chat extends Component {
         .map(({ id }) => allUsers.get(id) || new UserRecord())
         .map(({ firstName, lastName }) => `${firstName} ${lastName}`).join(', ');
 
+    const noMessages = groupedMessages.length === 0;
+
     return (
       <div className="chat">
         <div className="room-header">{roomName}</div>
         <div className="message-container" ref={(elem) => { this.messageContainer = elem; }}>
-          {groupedMessages.length === 0 && <span>no messages, yet :)</span>}
+          {noMessages && <span>no messages, yet :)</span>}
           {groupedMessages.map(msgs => <Message key={msgs[0].id} messages={msgs} />)}
           <div className="clearfix" />
         </div>
-        <div className="hr" />
+        <hr />
         <form className="input" onSubmit={handleSubmit}>
           <textarea
             ref={(elem) => { this.messageElement = elem; }}

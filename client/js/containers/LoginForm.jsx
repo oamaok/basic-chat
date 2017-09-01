@@ -13,9 +13,6 @@ import {
 
 import LabeledInput from 'components/LabeledInput';
 
-// Quick and dirty email regex
-const emailRegex = /^[^@]+@[^.]{2,}\..{2,}$/;
-
 class Authentication extends Component {
   state = {
     email: '',
@@ -38,17 +35,7 @@ class Authentication extends Component {
       handleSubmit,
     } = this;
 
-    const {
-      email,
-      password,
-    } = this.state;
-
     const { isAuthenticating, loginStatus } = this.props.authentication;
-
-    const loginButtonDisabled = !(
-      email.match(emailRegex)
-      && password.length >= 8
-    ) || isAuthenticating;
 
     const errorMessage = R.cond([
       [R.equals(0), R.always('')],
@@ -79,7 +66,7 @@ class Authentication extends Component {
         <input
           type="submit"
           value="log me in!"
-          disabled={loginButtonDisabled || isAuthenticating}
+          disabled={isAuthenticating}
         />
         {errorMessage && <div className="error">{errorMessage}</div>}
       </form>
