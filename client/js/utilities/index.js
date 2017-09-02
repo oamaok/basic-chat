@@ -1,6 +1,6 @@
 import R from 'ramda';
 
-export function createReducer(initialState: any, reducers: any) {
+export function createReducer(initialState, reducers) {
   return (state = initialState, action) => {
     const reducer = reducers[action.type];
     return reducer ? reducer(state, action.data) : state;
