@@ -33,10 +33,7 @@ export const RoomsState = Record({
   // Set of the room IDs the user 
   activeRooms: Set(),
 
-  // Private rooms
-
   currentRoom: '',
-
   isCreatingRoom: false,
   roomCreationError: '',
 });
