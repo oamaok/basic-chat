@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Set } from 'immutable';
 import R from 'ramda';
 import { ROOM_TYPE_PUBLIC } from 'common/constants';
-import Message from 'containers/Message';
+import MessageGroup from 'containers/MessageGroup';
 import Icon from 'components/Icon';
 import { stateToProps, bindState } from 'utilities';
 import { sendMessage } from 'actions/messages';
@@ -125,7 +125,7 @@ class Chat extends Component {
         <div className="room-header">{roomName}</div>
         <div className="message-container" ref={(elem) => { this.messageContainer = elem; }}>
           {noMessages && <span>no messages, yet :)</span>}
-          {groupedMessages.map(msgs => <Message key={msgs[0].id} messages={msgs} />)}
+          {groupedMessages.map(group => <MessageGroup key={group[0].id} messages={group} />)}
           <div className="clearfix" />
         </div>
         <hr />
