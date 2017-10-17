@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { stateToProps } from 'utilities';
 
-function Message({ messages, users }) {
+function MessageGroup({ messages, users }) {
   const { allUsers } = users;
 
   const message = messages[0];
@@ -32,9 +32,6 @@ function Message({ messages, users }) {
       <div className="sender">{user.firstName} {user.lastName}</div>
       <div className="date">{dateString}</div>
       {messages.map(formatContent)}
-      {message.sent &&
-        <div className="tools" />
-      }
       <div className="clearfix" />
     </div>
   );

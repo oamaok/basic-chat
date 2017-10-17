@@ -1,6 +1,6 @@
 import R from 'ramda';
 
-export function createReducer(initialState: any, reducers: any) {
+export function createReducer(initialState, reducers) {
   return (state = initialState, action) => {
     const reducer = reducers[action.type];
     return reducer ? reducer(state, action.data) : state;
@@ -14,7 +14,7 @@ export function stateToProps(...args) {
 export function bindState(thisBind) {
   return (function innerBind(key) {
     if (typeof key !== 'string') {
-      throw new Error('bindState only support a single key as a string: for more, use bindStateDeep');
+      throw new Error('bindState only supports a single key as a string: for more, use bindStateDeep');
     }
 
     return {
