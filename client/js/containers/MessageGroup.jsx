@@ -37,4 +37,4 @@ function MessageGroup({ messages, users }) {
   );
 }
 
-export default connect(stateToProps('users'))(Message);
+export default connect(stateToProps('users'))(MessageGroup);

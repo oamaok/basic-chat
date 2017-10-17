@@ -5,8 +5,7 @@ import classNames from 'classnames';
 import { stateToProps } from 'utilities';
 import Sidebar from 'containers/Sidebar';
 import Chat from 'containers/Chat';
-import RoomSelector from 'containers/RoomSelector';
-import UserSelector from 'containers/UserSelector';
+import Modal from 'containers/Modal';
 import Connection from '../Connection';
 
 class App extends Component {
@@ -74,22 +73,18 @@ class App extends Component {
     // TODO: Display a spinner while initializing connection (?)
     // TODO: Display an error while trying to reconnect
 
-    const isModalOpen = this.props.modals.userSelectorOpen
-      || this.props.modals.roomSelectorOpen;
-
     const initializing = this.state.initializing
       || this.props.rooms.availableRooms.size === 0;
 
     const containerClass = classNames('app-container', {
-      'modal-open': isModalOpen,
       initializing,
+      'modal-open': this.props.modal.open,
     });
 
 
     return (
       <div className="app">
-        <RoomSelector />
-        <UserSelector />
+        <Modal />
         <div className={containerClass}>
           <Sidebar />
           <Chat />
@@ -99,4 +94,4 @@ class App extends Component {
   }
 }
 
-export default connect(stateToProps('authentication', 'rooms', 'modals'))(App);
+export default connect(stateToProps('authentication', 'rooms', 'modal'))(App);
