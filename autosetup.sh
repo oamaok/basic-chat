@@ -24,7 +24,7 @@ rm -rf ./Versioning
 git clone --depth 1 https://github.com/depesz/Versioning &> /dev/null
 echo "Done!"
 
-echo -n "Installing 'Versioning' to database '$PGDATABASE'... "
+echo -n "Installing 'Versioning' on database '$PGDATABASE'... "
 psql < ./Versioning/install.versioning.sql &> /dev/null
 echo "Done!"
 
