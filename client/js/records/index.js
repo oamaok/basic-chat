@@ -1,4 +1,5 @@
 import { Record, Map, Set } from 'immutable';
+import { MODAL_NONE } from 'utilities/constants';
 
 export const UserRecord = Record({
   id: '',
@@ -65,6 +66,6 @@ export const MessagesState = Record({
 
 
 export const ModalsState = Record({
-  roomSelectorOpen: false,
-  userSelectorOpen: false,
+  open: false,
+  component: MODAL_NONE,
 });

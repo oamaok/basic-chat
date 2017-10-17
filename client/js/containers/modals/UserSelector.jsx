@@ -3,21 +3,15 @@ import { connect } from 'react-redux';
 import { stateToProps } from 'utilities';
 import { ROOM_TYPE_PRIVATE } from 'common/constants';
 import { changeRoom, createPrivateRoom } from 'actions/rooms';
-import { closeUserSelector } from 'actions/modals';
+import { closeModal } from 'actions/modal';
 import Icon from 'components/Icon';
 import StatusIndicator from 'components/StatusIndicator';
 
 class UserSelector extends Component {
-  handleWrapperClick = (evt) => {
-    if (Array.from(evt.target.classList).includes('modal-wrapper')) {
-      this.props.closeUserSelector();
-    }
-  }
-
   startChat = (userId) => {
     // TODO: causes the modal to close instantly,
     // should wait until the room is created
-    this.props.closeUserSelector();
+    this.props.closeModal();
 
     // Check if the current user has a private one-on-one room with the subject 
     const existingRoom = this.props.rooms.availableRooms
@@ -37,10 +31,9 @@ class UserSelector extends Component {
 
   render() {
     const {
-      handleWrapperClick,
+      startChat,
     } = this;
 
-    const { userSelectorOpen } = this.props.modals;
     const { allUsers, connectedUsers } = this.props.users;
 
     // Filter out the current user
@@ -48,31 +41,27 @@ class UserSelector extends Component {
       .filter(({ id }) => id !== this.props.authentication.currentUser.id);
 
     /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
+    /* eslint-disable jsx-a11y/no-static-element-interactions */
     return (
-      <div
-        className={userSelectorOpen ? 'modal-wrapper open' : 'modal-wrapper'}
-        onClick={handleWrapperClick}
-      >
-        <div className="modal user-selector">
-          <div className="join">
-            <div>
-              <h3>start a chat with...</h3>
-              <button
-                className="modal-exit"
-                onClick={this.props.closeUserSelector}
-              >
-                <Icon name="&#xE14C;" />
-              </button>
-            </div>
-            <div className="user-list">
-              {users.map(({ id, firstName, lastName }) => (
-                <div className="user" key={id}>
-                  <StatusIndicator online={connectedUsers.includes(id)} />
-                  {firstName} {lastName}
-                  <button onClick={() => this.startChat(id)}>chat!</button>
-                </div>
-              )).toArray()}
-            </div>
+      <div className="modal user-selector">
+        <div className="join">
+          <div>
+            <h3>start a chat with...</h3>
+            <button
+              className="modal-exit"
+              onClick={this.props.closeModal}
+            >
+              <Icon name="&#xE14C;" />
+            </button>
+          </div>
+          <div className="user-list">
+            {users.map(({ id, firstName, lastName }) => (
+              <div className="user" key={id}>
+                <StatusIndicator online={connectedUsers.includes(id)} />
+                {firstName} {lastName}
+                <button onClick={() => startChat(id)}>chat!</button>
+              </div>
+            )).toArray()}
           </div>
         </div>
       </div>
@@ -80,8 +69,8 @@ class UserSelector extends Component {
   }
 }
 
-export default connect(stateToProps('modals', 'rooms', 'users', 'authentication'), {
-  closeUserSelector,
+export default connect(stateToProps('rooms', 'users', 'authentication'), {
   changeRoom,
   createPrivateRoom,
+  closeModal,
 })(UserSelector);

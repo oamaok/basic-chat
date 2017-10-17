@@ -15,7 +15,7 @@ import authentication from 'reducers/authentication';
 import rooms from 'reducers/rooms';
 import users from 'reducers/users';
 import messages from 'reducers/messages';
-import modals from 'reducers/modals';
+import modal from 'reducers/modal';
 
 import Root from 'containers/Root';
 
@@ -30,7 +30,7 @@ const multiActions = store => next => action =>
       rooms,
       users,
       messages,
-      modals,
+      modal,
     }),
     applyMiddleware(
       ReduxThunk,

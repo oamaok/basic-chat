@@ -10,19 +10,7 @@ Basic authenticated chat with rooms and private messaging.
 
 ## Installation
 
-After cloning the repository create a database with the name `basic_chat` (or something else if you wish to configure the server differently). Using `/server/config/config.json` as a template update your database credentials in `/server/config/config.ENV.json`, where `ENV` matches the value of the current `NODE_ENV` environment variable. Also configure other variables in the config file to your liking.
-
-Next, install [Versioning](https://github.com/depesz/Versioning) on the database you wish to use.
-
-Next, navigate to the main directory of the repository and run the following commands:
-
-```shell
-# Install the required Node packages
-npm install
-
-# Generate the DB schema
-./migrate
-```
+Run `./autosetup.sh` and fill in the required information.
 
 ## Development
 

@@ -1,8 +1,8 @@
 #!/bin/bash
 
 if [ -d "./server" ]; then
-  cat ./server/migrations/*.sql | sudo -u postgres psql basic_chat
+  cat ./server/migrations/*.sql | psql
 else
-  cat ./build/server/migrations/*.sql | sudo -u postgres psql basic_chat
+  cat ./build/server/migrations/*.sql | psql
 fi
 
