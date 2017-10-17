@@ -1,9 +1,7 @@
 import React, { Component } from 'react';
-import { Map } from 'immutable';
 import { connect } from 'react-redux';
 import { stateToProps } from 'utilities';
 
-import { closeModal } from 'actions/modal';
 import {
   MODAL_NONE,
   MODAL_USER_SELECTOR,
@@ -18,33 +16,27 @@ class Modal extends Component {
 
   handleWrapperClick = (evt) => {
     if (evt.target === this.wrapperElement) {
-      this.props.closeModal();
+      // DEV-SCHOOL: closeModal action should be called here.
     }
   }
 
   render() {
-    const components = Map([
-      [MODAL_NONE, null],
-      [MODAL_ROOM_SELECTOR, <RoomSelector />],
-      [MODAL_USER_SELECTOR, <UserSelector />],
-    ]);
-
-    const { modal } = this.props;
+    // DEV-SCHOOL: The wrapper should have class additional 'open' when a modal is active.
+    const modalClass = 'modal-wrapper';
 
     /* eslint-disable jsx-a11y/no-static-element-interactions */
     /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
     return (
       <div
         ref={(elem) => { this.wrapperElement = elem; }}
-        className={modal.open ? 'modal-wrapper open' : 'modal-wrapper'}
+        className={modalClass}
         onClick={this.handleWrapperClick}
       >
-        {components.get(modal.component)}
+        {/* DEV-SCHOOL: The correct modal component should be embedded here */}
       </div>
     );
   }
 }
 
-export default connect(stateToProps('modal'), {
-  closeModal,
-})(Modal);
+// DEV-SCHOOL: Supply the connect HOC with the correct parameters.
+export default connect()(Modal);

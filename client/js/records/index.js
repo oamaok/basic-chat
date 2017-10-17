@@ -65,7 +65,7 @@ export const MessagesState = Record({
 });
 
 
+// DEV-SCHOOL: Implement the shape of the reducer state.
 export const ModalsState = Record({
-  open: false,
-  component: MODAL_NONE,
+
 });

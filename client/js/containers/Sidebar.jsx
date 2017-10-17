@@ -5,7 +5,6 @@ import { stateToProps } from 'utilities';
 import Icon from 'components/Icon';
 import { changeRoom } from 'actions/rooms';
 import { logout } from 'actions/authentication';
-import { openModal } from 'actions/modal';
 
 import {
   MODAL_USER_SELECTOR,
@@ -22,7 +21,6 @@ import PrivateRoomListing from 'containers/PrivateRoomListing';
 
 function Sidebar({
   rooms,
-  openModal,
   logout,
   authentication,
 }) {
@@ -42,7 +40,8 @@ function Sidebar({
     <div className="sidebar">
       <div className="section-title">
         rooms
-        <button onClick={() => openModal(MODAL_ROOM_SELECTOR)}>
+        {/* DEV-SCHOOL: This button should open the RoomSelector-modal */}
+        <button onClick={() => {}}>
           <Icon name="&#xE145;" />
         </button>
       </div>
@@ -52,7 +51,8 @@ function Sidebar({
       <hr />
       <div className="section-title">
         people
-        <button onClick={() => openModal(MODAL_USER_SELECTOR)}>
+        {/* DEV-SCHOOL: This button should open the UserSelector-modal */}
+        <button onClick={() => {}}>
           <Icon name="&#xE145;" />
         </button>
       </div>
@@ -69,6 +69,5 @@ function Sidebar({
 
 export default connect(stateToProps('authentication', 'rooms', 'users'), {
   changeRoom,
-  openModal,
   logout,
 })(Sidebar);
