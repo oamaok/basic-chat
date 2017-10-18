@@ -84,7 +84,7 @@ class Chat extends Component {
     } = this.props.authentication;
 
     const {
-      allUsers,
+      allUsers: users,
     } = this.props.users;
 
     const room = availableRooms.get(currentRoom) || new RoomRecord();
@@ -115,7 +115,7 @@ class Chat extends Component {
       : room.users
         .filter(({ id }) => id !== currentUser.id)
         // Since the users may have not been loaded, fall back to defaults
-        .map(({ id }) => allUsers.get(id) || new UserRecord())
+        .map(({ id }) => users.get(id) || new UserRecord())
         .map(({ firstName, lastName }) => `${firstName} ${lastName}`).join(', ');
 
     const noMessages = groupedMessages.length === 0;

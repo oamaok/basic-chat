@@ -78,7 +78,6 @@ class App extends Component {
 
     const containerClass = classNames('app-container', {
       initializing,
-      'modal-open': this.props.modal.open,
     });
 
 
@@ -94,4 +93,4 @@ class App extends Component {
   }
 }
 
-export default connect(stateToProps('authentication', 'rooms', 'modal'))(App);
+export default connect(stateToProps('authentication', 'rooms'))(App);
