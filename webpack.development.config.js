@@ -6,7 +6,6 @@ module.exports = {
   entry: {
     app: [
       'babel-polyfill',
-      'react-hot-loader/patch',
       'webpack-hot-middleware/client',
       './client/js/index.jsx',
       './client/sass/main.sass',
