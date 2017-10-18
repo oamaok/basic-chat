@@ -63,34 +63,10 @@ const multiActions = store => next => action =>
     }
   }, 1000 * 60 * 5);
 
-  if (__dev) {
-    /* eslint-disable global-require */
-    // Require the app container here, so the dead code elimination
-    // can trim it off when building for production
-    const { AppContainer } = require('react-hot-loader');
-
-    const render = () => {
-      ReactDOM.render(
-        <AppContainer>
-          <Provider store={store}>
-            <Root />
-          </Provider>
-        </AppContainer>,
-        document.getElementById('root')
-      );
-    };
-
-    render();
-
-    if (module.hot) {
-      module.hot.accept('./containers/Root', render);
-    }
-  } else {
-    ReactDOM.render(
-      <Provider store={store}>
-        <Root history={history} />
-      </Provider>,
-      document.getElementById('root')
-    );
-  }
+  ReactDOM.render(
+    <Provider store={store}>
+      <Root history={history} />
+    </Provider>,
+    document.getElementById('root')
+  );
 })();
